@@ -1,0 +1,16 @@
+{
+  "name": "codemates-be",
+  "version": "1.0.0",
+  "description": "codemates is kind of dating app for developers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "microservices"
+  ],
+  "author": "Aayush",
+  "license": "ISC"
+}
