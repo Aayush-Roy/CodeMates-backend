@@ -1,21 +1,15 @@
 import express from "express";
 const app = express();
 
+let user = [];
 
-// app.use((req,res)=>{
-//     res.send("hello from the server");
-// })
-app.use("/hello/2",(req,res)=>{
-    res.send("hello from the /hello/2");
-})
-app.use("/hello",(req,res)=>{
-    res.send("hello from the /hello");
+app.get("/user",(req,res)=>{
+    return res.json(user);
 })
 
-
-
-app.use("/test",(req,res)=>{
-    res.send("testing.....")
+app.post("/user",(req,res)=>{
+    user.push({name:"Aayush",email:"a@gmail.com"});
+    return res.json(user);
 })
 
 app.listen(3000,()=>{
