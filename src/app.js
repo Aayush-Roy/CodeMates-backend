@@ -22,6 +22,18 @@ app.get("/admin/delData",(req,res)=>{
     res.send("Deleted user")
 })
 
+
+
+app.get("/user",(req,res)=>{
+    throw new Error("something went wrong")
+    res.send("userData");
+})
+app.use("/",(err,req,res,next)=>{
+    if(err){
+        res.status(500).send("Something went wrong!!")
+    }
+    next()
+})
 app.listen(3000,()=>{
     console.log("Server is listening on port 3000....")
 })
