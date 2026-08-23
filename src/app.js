@@ -1,39 +1,12 @@
 import express from "express";
-import { adminAuth } from "./middleware/adminAuth.js";
+import { connectDB } from "./config/database.js";
 const app = express();
 
-app.use("/admin",adminAuth);
-// app.use("/admin",(req,res, next)=>{
-//     const token = "xyz";
-//     const isAuthorized = token ==="xyz";
-//     console.log("Admin auth checked")
-//     if(!isAuthorized){
-//         res.status(401).send("Unauthorized");
-//     }else{
-//         next();
-//     }
-// })
-
-app.get("/admin/getData",(req,res)=>{
-  res.send("All Data")
-})
-
-app.get("/admin/delData",(req,res)=>{
-    res.send("Deleted user")
-})
-
-
-
-app.get("/user",(req,res)=>{
-    throw new Error("something went wrong")
-    res.send("userData");
-})
-app.use("/",(err,req,res,next)=>{
-    if(err){
-        res.status(500).send("Something went wrong!!")
-    }
-    next()
-})
-app.listen(3000,()=>{
+connectDB().then(()=>{
+    console.log("DB connection established");
+    app.listen(3000,()=>{    
     console.log("Server is listening on port 3000....")
+})
+}).catch(err=>{
+    console.log("DB connection failed", err);
 })
