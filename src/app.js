@@ -2,20 +2,26 @@ import express from "express";
 import { connectDB } from "./config/database.js";
 import { userModel } from "./models/user.js";
 const app = express();
-
+app.use(express.json());
 
 
 app.post("/signup",async(req,res)=>{
-    console.log(req);
-    // const newUser = await userModel({
-    //     firstName:"Aayush",
-    //     lastName:"Roy",
-    //     age:21,
-    //     email:"aayush@gmail.com",
-    //     password:"12345",
-    // })
-    // newUser.save();
-    // res.send("User Created", newUser)
+    // console.log(req.body);
+    const newUser = await userModel(req.body)
+    newUser.save();
+    res.send("User Created", newUser)
+})
+
+app.get("/user",async(req,res)=>{
+    try{
+    const fname = req.body.firstName;
+    const user = await userModel.find({firstName:fname});
+    res.status(200).json(user);
+
+    }catch(err){
+        console.log("Something went wrong!")
+    }
+    
 })
 
 connectDB().then(()=>{
