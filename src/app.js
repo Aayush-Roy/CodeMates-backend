@@ -24,6 +24,25 @@ app.get("/user",async(req,res)=>{
     
 })
 
+app.get("/feed",async(req,res)=>{
+    try{
+    // const fname = req.body.firstName;
+    const user = await userModel.find({});
+    res.status(200).json(user);
+
+    }catch(err){
+        console.log("Something went wrong!")
+    }
+    
+})
+
+app.delete("/user", async(req,res)=>{
+    const userId = req.body.userId;
+    const deluser = await userModel.findByIdAndDelete(userId);
+    console.log(deluser)
+    res.send("user deleted");
+})
+
 connectDB().then(()=>{
     console.log("DB connection established");
     app.listen(3000,()=>{    
