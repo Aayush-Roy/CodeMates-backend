@@ -6,15 +6,16 @@ const app = express();
 
 
 app.post("/signup",async(req,res)=>{
-    const newUser = await userModel({
-        firstName:"Aayush",
-        lastName:"Roy",
-        age:21,
-        email:"aayush@gmail.com",
-        password:"12345",
-    })
-    newUser.save();
-    res.send("User Created", newUser)
+    console.log(req);
+    // const newUser = await userModel({
+    //     firstName:"Aayush",
+    //     lastName:"Roy",
+    //     age:21,
+    //     email:"aayush@gmail.com",
+    //     password:"12345",
+    // })
+    // newUser.save();
+    // res.send("User Created", newUser)
 })
 
 connectDB().then(()=>{
