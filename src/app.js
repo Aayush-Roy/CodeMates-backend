@@ -8,12 +8,12 @@ app.use(express.json());
 app.post("/signup",async(req,res)=>{
     // console.log(req.body);
     try{
-    const newUser = await userModel(req.body)
+    const newUser =  userModel(req.body)
     console.log(newUser)
-    newUser.save();
+   await newUser.save();
     res.send("User Created", newUser)
     }catch(err){
-        res.send("Something went wrong!", err);
+        res.send(err.message);
     }
   
 })
