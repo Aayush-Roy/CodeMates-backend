@@ -7,9 +7,15 @@ app.use(express.json());
 
 app.post("/signup",async(req,res)=>{
     // console.log(req.body);
+    try{
     const newUser = await userModel(req.body)
+    console.log(newUser)
     newUser.save();
     res.send("User Created", newUser)
+    }catch(err){
+        res.send("Something went wrong!", err);
+    }
+  
 })
 
 app.get("/user",async(req,res)=>{
