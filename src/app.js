@@ -36,12 +36,24 @@ app.get("/feed",async(req,res)=>{
     
 })
 
+app.patch("/user",async(req,res)=>{
+    const userId = req.body.userId;
+    const data = req.body;
+    console.log("data", data)
+    const user = await userModel.findByIdAndUpdate({_id:userId},data);
+    // console.log(user);
+    res.send("user updated",user)
+})
+
+
 app.delete("/user", async(req,res)=>{
     const userId = req.body.userId;
     const deluser = await userModel.findByIdAndDelete(userId);
     console.log(deluser)
     res.send("user deleted");
 })
+
+
 
 connectDB().then(()=>{
     console.log("DB connection established");
