@@ -43,12 +43,19 @@ app.get("/feed",async(req,res)=>{
 })
 
 app.patch("/user",async(req,res)=>{
-    const userId = req.body.userId;
+    try{
+         const userId = req.body.userId;
     const data = req.body;
     console.log("data", data)
-    const user = await userModel.findByIdAndUpdate({_id:userId},data);
+    const user = await userModel.findByIdAndUpdate({_id:userId},data,{
+        runValidators:true,
+    });
     // console.log(user);
     res.send("user updated",user)
+    }catch(err){
+        res.status(500).send(err.message)
+    }
+   
 })
 
 
