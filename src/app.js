@@ -3,6 +3,7 @@ import { connectDB } from "./config/database.js";
 import { userModel } from "./models/user.js";
 import { validateSignUpData } from "./utils/validation.js";
 import bcrypt from "bcrypt"
+import validator from "validator"
 const app = express();
 app.use(express.json());
 
@@ -25,6 +26,36 @@ app.post("/signup",async(req,res)=>{
     }
   
 })
+
+app.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !validator.isEmail(email)) {
+            throw new Error("Email is not valid!");
+        }
+
+        const user = await userModel.findOne({ email });
+
+        if (!user) {
+            throw new Error("Invalid Credentials");
+        }
+
+        const isPasswordValid = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if (!isPasswordValid) {
+            throw new Error("Password is not correct!");
+        }
+
+        res.send("Login Successful!!");
+
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+});
 
 app.get("/user",async(req,res)=>{
     try{
