@@ -1,6 +1,7 @@
 import express from "express";
 import { connectDB } from "./config/database.js";
 import { userModel } from "./models/user.js";
+import { validateSignUpData } from "./utils/validation.js";
 const app = express();
 app.use(express.json());
 
@@ -8,6 +9,7 @@ app.use(express.json());
 app.post("/signup",async(req,res)=>{
     // console.log(req.body);
     try{
+    validateSignUpData(req);
     const newUser =  userModel(req.body)
     console.log(newUser)
    await newUser.save();
