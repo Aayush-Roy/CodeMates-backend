@@ -42,22 +42,66 @@ app.get("/feed",async(req,res)=>{
     
 })
 
-app.patch("/user",async(req,res)=>{
-    try{
-         const userId = req.body.userId;
-    const data = req.body;
-    console.log("data", data)
-    const user = await userModel.findByIdAndUpdate({_id:userId},data,{
-        runValidators:true,
-    });
-    // console.log(user);
-    res.send("user updated",user)
-    }catch(err){
-        res.status(500).send(err.message)
-    }
+// app.patch("/user",async(req,res)=>{
+//     try{
+//              const userId = req.body.userId;
+//     const data = req.body;
+//         const Allowed_Updated = ["userId","age","about","photoUrl","gender","skills"]
+//         const isUpdateAllowed = Object.keys(data).every((k)=>Allowed_Updated.includes(k));
+//         if(!isUpdateAllowed){
+//             throw new Error("Update not Allowed")
+//         }
+    
+//     console.log("data", data)
+//     const user = await userModel.findByIdAndUpdate({_id:userId},data,{
+//         runValidators:true,
+//     });
+//     // console.log(user);
+//     res.send("user updated",user)
+//     }catch(err){
+//         res.status(500).send(err.message)
+//     }
    
-})
+// })
+app.patch("/user", async (req, res) => {
+    try {
+        const { userId, ...data } = req.body;
 
+        const allowedUpdated = [
+            "age",
+            "about",
+            "photoUrl",
+            "gender",
+            "skills"
+        ];
+
+        const isUpdateAllowed = Object.keys(data).every((key) =>
+            allowedUpdated.includes(key)
+        );
+
+        if (!isUpdateAllowed) {
+            return res.status(400).send("Update not allowed");
+        }
+
+        const user = await userModel.findByIdAndUpdate(
+            userId,
+            data,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+
+        res.status(200).send(user);
+
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
 
 app.delete("/user", async(req,res)=>{
     const userId = req.body.userId;
