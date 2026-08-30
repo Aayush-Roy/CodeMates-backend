@@ -63,9 +63,10 @@ app.get("/feed",async(req,res)=>{
 //     }
    
 // })
-app.patch("/user", async (req, res) => {
+app.patch("/user/:userId", async (req, res) => {
     try {
-        const { userId, ...data } = req.body;
+        const userId = req.params?.userId;
+        const data  = req.body;
 
         const allowedUpdated = [
             "age",
