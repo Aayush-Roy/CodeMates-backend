@@ -49,6 +49,7 @@ app.post("/login", async (req, res) => {
         if (!isPasswordValid) {
             throw new Error("Password is not correct!");
         }
+        res.cookie("token","jkasgiu62389eyuasukgdbukasd3829");
 
         res.send("Login Successful!!");
 
