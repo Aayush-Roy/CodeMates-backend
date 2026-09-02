@@ -5,6 +5,7 @@ import { validateSignUpData } from "./utils/validation.js";
 import bcrypt from "bcrypt"
 import cookieParser from "cookie-parser";
 import validator from "validator"
+import jwt, { decode } from "jsonwebtoken";
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -46,26 +47,32 @@ app.post("/login", async (req, res) => {
             password,
             user.password
         );
-
-        if (!isPasswordValid) {
-            throw new Error("Password is not correct!");
-        }
-        res.cookie("token","jkasgiu62389eyuasukgdbukasd3829");
-
+        
+       
+        if (isPasswordValid) {
+        const token = jwt.sign({_id:user._id},"CODEMATES@321");
+        res.cookie("token",token);
         res.send("Login Successful!!");
+        }else{
+            throw new Error("Invalid Credentials");
+        }
+       
 
     } catch (err) {
         res.status(400).send(err.message);
     }
 });
 
-app.get("/profile",(req,res)=>{
+app.get("/profile",async(req,res)=>{
     try{
         const cookies = req.cookies;
         const {token} = cookies;
-        if(!token) return res.send("User Unauthorized")
-    console.log(cookies);
-    res.send(cookies);
+        if(!token) throw new Error("Invalid token");
+        const decodedvalue = await jwt.verify(token,"CODEMATES@321");
+        const {_id} = decodedvalue;
+        const user = await userModel.findById(_id);
+        if(!user) throw new Error("user not found");
+    res.send(user);
     }catch(err){
         console.log(err);
         res.send("failed to fetch profile", err);
