@@ -3,10 +3,11 @@ import { connectDB } from "./config/database.js";
 import { userModel } from "./models/user.js";
 import { validateSignUpData } from "./utils/validation.js";
 import bcrypt from "bcrypt"
+import cookieParser from "cookie-parser";
 import validator from "validator"
 const app = express();
 app.use(express.json());
-
+app.use(cookieParser());
 
 app.post("/signup",async(req,res)=>{
     // console.log(req.body);
@@ -57,6 +58,22 @@ app.post("/login", async (req, res) => {
         res.status(400).send(err.message);
     }
 });
+
+app.get("/profile",(req,res)=>{
+    try{
+        const cookies = req.cookies;
+        const {token} = cookies;
+        if(!token) return res.send("User Unauthorized")
+    console.log(cookies);
+    res.send(cookies);
+    }catch(err){
+        console.log(err);
+        res.send("failed to fetch profile", err);
+    }
+    
+})
+
+
 
 app.get("/user",async(req,res)=>{
     try{
