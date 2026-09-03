@@ -64,14 +64,10 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/profile",async(req,res)=>{
+app.get("/profile",userAuth,async(req,res)=>{
     try{
-        const cookies = req.cookies;
-        const {token} = cookies;
-        if(!token) throw new Error("Invalid token");
-        const decodedvalue = await jwt.verify(token,"CODEMATES@321");
-        const {_id} = decodedvalue;
-        const user = await userModel.findById(_id);
+      
+        const user = req.user;
         if(!user) throw new Error("user not found");
     res.send(user);
     }catch(err){
@@ -82,101 +78,11 @@ app.get("/profile",async(req,res)=>{
 })
 
 
-
-app.get("/user",async(req,res)=>{
-    try{
-    const fname = req.body.firstName;
-    const user = await userModel.find({firstName:fname});
-    res.status(200).json(user);
-
-    }catch(err){
-        console.log("Something went wrong!")
-    }
-    
+app.post("/sendConnectionRequest", userAuth, async(req,res)=>{
+    const user = req.user;
+    console.log("connection req sent");
+    res.send(`${user.firstName} sent a connection request`);
 })
-
-app.get("/feed", userAuth, async(req,res)=>{
-    try{
-    // const fname = req.body.firstName;
-    const user = await userModel.find({});
-    res.status(200).json(user);
-
-    }catch(err){
-        console.log("Something went wrong!")
-    }
-    
-})
-
-// app.patch("/user",async(req,res)=>{
-//     try{
-//              const userId = req.body.userId;
-//     const data = req.body;
-//         const Allowed_Updated = ["userId","age","about","photoUrl","gender","skills"]
-//         const isUpdateAllowed = Object.keys(data).every((k)=>Allowed_Updated.includes(k));
-//         if(!isUpdateAllowed){
-//             throw new Error("Update not Allowed")
-//         }
-    
-//     console.log("data", data)
-//     const user = await userModel.findByIdAndUpdate({_id:userId},data,{
-//         runValidators:true,
-//     });
-//     // console.log(user);
-//     res.send("user updated",user)
-//     }catch(err){
-//         res.status(500).send(err.message)
-//     }
-   
-// })
-app.patch("/user/:userId", async (req, res) => {
-    try {
-        const userId = req.params?.userId;
-        const data  = req.body;
-
-        const allowedUpdated = [
-            "age",
-            "about",
-            "photoUrl",
-            "gender",
-            "skills"
-        ];
-
-        const isUpdateAllowed = Object.keys(data).every((key) =>
-            allowedUpdated.includes(key)
-        );
-
-        if (!isUpdateAllowed) {
-            return res.status(400).send("Update not allowed");
-        }
-
-        const user = await userModel.findByIdAndUpdate(
-            userId,
-            data,
-            {
-                new: true,
-                runValidators: true
-            }
-        );
-
-        if (!user) {
-            return res.status(404).send("User not found");
-        }
-
-        res.status(200).send(user);
-
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
-
-app.delete("/user", async(req,res)=>{
-    const userId = req.body.userId;
-    const deluser = await userModel.findByIdAndDelete(userId);
-    console.log(deluser)
-    res.send("user deleted");
-})
-
-
 
 connectDB().then(()=>{
     console.log("DB connection established");

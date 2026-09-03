@@ -6,8 +6,10 @@ export const userAuth = async(req,res,next)=>{
         if(!token) throw new Error("Token is not valid!!")
         const decodedObj = await jwt.verify(token,"CODEMATES@321");
         const {_id} = decodedObj;
-        const user = userModel.findById(_id);
+        const user = await userModel.findById(_id);
+       
         if(!user) throw new Error("User not found");
+         req.user = user;
         next();
         
         
