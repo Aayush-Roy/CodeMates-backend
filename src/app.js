@@ -6,6 +6,7 @@ import bcrypt from "bcrypt"
 import cookieParser from "cookie-parser";
 import validator from "validator"
 import jwt, { decode } from "jsonwebtoken";
+import { userAuth } from "./middleware/adminAuth.js";
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -94,7 +95,7 @@ app.get("/user",async(req,res)=>{
     
 })
 
-app.get("/feed",async(req,res)=>{
+app.get("/feed", userAuth, async(req,res)=>{
     try{
     // const fname = req.body.firstName;
     const user = await userModel.find({});
