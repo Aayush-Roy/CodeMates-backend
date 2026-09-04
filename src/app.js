@@ -51,8 +51,8 @@ app.post("/login", async (req, res) => {
         
        
         if (isPasswordValid) {
-        const token = jwt.sign({_id:user._id},"CODEMATES@321");
-        res.cookie("token",token);
+        const token = jwt.sign({_id:user._id},"CODEMATES@321", {expiresIn:"1d"} );
+        res.cookie("token",token, {expires:new Date(Date.now()+8*360000)});
         res.send("Login Successful!!");
         }else{
             throw new Error("Invalid Credentials");
