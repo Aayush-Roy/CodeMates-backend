@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userAuth } from "../middleware/adminAuth";
+import { userAuth } from "../middleware/adminAuth.js";
 const router = Router();
 
 router.get("/profile",userAuth,async(req,res)=>{

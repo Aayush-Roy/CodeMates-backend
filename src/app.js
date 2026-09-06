@@ -3,32 +3,19 @@ import { connectDB } from "./config/database.js";
 import cookieParser from "cookie-parser";
 import { userAuth } from "./middleware/adminAuth.js";
 import authRoute from "./routes/authRoutes.js";
+import profileRoute from "./routes/profileRoutes.js";
+import requestRouter from "./routes/requestRouter.js";
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
 app.use("/", authRoute);
+app.use("/", profileRoute);
+app.use("/", requestRouter);
 
 
-app.get("/profile",userAuth,async(req,res)=>{
-    try{
-      
-        const user = req.user;
-        if(!user) throw new Error("user not found");
-    res.send(user);
-    }catch(err){
-        console.log(err);
-        res.send("failed to fetch profile", err);
-    }
-    
-})
 
 
-app.post("/sendConnectionRequest", userAuth, async(req,res)=>{
-    const user = req.user;
-    console.log("connection req sent");
-    res.send(`${user.firstName} sent a connection request`);
-})
 
 connectDB().then(()=>{
     console.log("DB connection established");
