@@ -1,11 +1,6 @@
 import express from "express";
 import { connectDB } from "./config/database.js";
-import { User } from "./models/user.js";
-import { validateSignUpData } from "./utils/validation.js";
-import bcrypt from "bcrypt"
 import cookieParser from "cookie-parser";
-import validator from "validator"
-import jwt, { decode } from "jsonwebtoken";
 import { userAuth } from "./middleware/adminAuth.js";
 import authRoute from "./routes/authRoutes.js";
 const app = express();
