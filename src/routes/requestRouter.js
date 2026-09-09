@@ -16,11 +16,11 @@ router.post("/request/send/:status/:toUserId", userAuth, async(req,res)=>{
             return res.status(400).json({message:"Invalid Status " + status})
         }
 
-        if(fromUserId==toUserId) {
-            return res.status(400).json({
-                message:"Same user can't send req ownself"
-            })
-        }
+        // if(fromUserId==toUserId) {
+        //     return res.status(400).json({
+        //         message:"Same user can't send req ownself"
+        //     })
+        // }
         const toUser = await User.findById(toUserId);
         if(!toUser) return res.status(404).json({message:"User doesn't exist"});
 
