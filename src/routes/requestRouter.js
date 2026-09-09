@@ -4,18 +4,16 @@ import { Connection } from "../models/connectionRequest.js";
 const router = Router();
 
 
-// router.post("/sendConnectionRequest", userAuth, async(req,res)=>{
-//     const user = req.user;
-//     console.log("connection req sent");
-//     res.send(`${user.firstName} sent a connection request`);
-// })
 
 router.post("/request/send/:status/:toUserId", userAuth, async(req,res)=>{
     try{
         const fromUserId = req.user._id;
         const toUserId = req.params.toUserId;
         const status = req.params.status;
-
+        const allowedStatus = ["ignored","interested"];
+        if(!allowedStatus.includes(status)){
+            return res.status(400).json({message:"Invalid Status " + status})
+        }
         const connectionRequest = new Connection({
             fromUserId,
             toUserId,
@@ -29,7 +27,8 @@ router.post("/request/send/:status/:toUserId", userAuth, async(req,res)=>{
         })
 
     }catch(err){
-        res.status(400).send("Error", err.message);
+        
+        res.status(400).send("Error" + err.message);
     }
     
 })
