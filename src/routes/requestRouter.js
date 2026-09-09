@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { userAuth } from "../middleware/adminAuth.js";
 import { Connection } from "../models/connectionRequest.js";
+import { User } from "../models/user.js";
 const router = Router();
 
 
@@ -13,6 +14,26 @@ router.post("/request/send/:status/:toUserId", userAuth, async(req,res)=>{
         const allowedStatus = ["ignored","interested"];
         if(!allowedStatus.includes(status)){
             return res.status(400).json({message:"Invalid Status " + status})
+        }
+
+        if(fromUserId==toUserId) {
+            return res.status(400).json({
+                message:"Same user can't send req ownself"
+            })
+        }
+        const toUser = await User.findById(toUserId);
+        if(!toUser) return res.status(404).json({message:"User doesn't exist"});
+
+        const existingConnectionRequest = await Connection.findOne({
+            $or:[
+                {fromUserId, toUserId},
+                {fromUserId:toUserId, toUserId:fromUserId}
+            ]
+        });
+        if(existingConnectionRequest){
+            return res.status(400).send({
+                message:"Connection Request already sent",
+            })
         }
         const connectionRequest = new Connection({
             fromUserId,
