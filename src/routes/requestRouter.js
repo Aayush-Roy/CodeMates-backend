@@ -16,11 +16,7 @@ router.post("/request/send/:status/:toUserId", userAuth, async(req,res)=>{
             return res.status(400).json({message:"Invalid Status " + status})
         }
 
-        // if(fromUserId==toUserId) {
-        //     return res.status(400).json({
-        //         message:"Same user can't send req ownself"
-        //     })
-        // }
+        
         const toUser = await User.findById(toUserId);
         if(!toUser) return res.status(404).json({message:"User doesn't exist"});
 
@@ -43,13 +39,16 @@ router.post("/request/send/:status/:toUserId", userAuth, async(req,res)=>{
 
         const data = await connectionRequest.save();
         res.json({
-            message:"connection req sent!!",
+            // message:`${req.user.firstName} is ${status} in ${toUser.firstName}`,
+            message: status === "interested"
+    ? `Connection request sent to ${toUser.firstName}`
+    : `Connection request ignored for ${toUser.firstName}`,
             data,
         })
 
     }catch(err){
-        
-        res.status(400).send("Error" + err.message);
+       
+        res.status(400).send("Error"+err.message);
     }
     
 })
