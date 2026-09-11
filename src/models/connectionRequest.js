@@ -22,6 +22,9 @@ const connectionSchema = mongoose.Schema({
     timestamps:true,
 })
 
+
+connectionSchema.index({fromUserId:1, toUserId:1});
+
 connectionSchema.pre("save", function(){
     const connectionRequest = this;
     if(connectionRequest.fromUserId.equals(connectionRequest.toUserId)){
