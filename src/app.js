@@ -5,6 +5,7 @@ import { userAuth } from "./middleware/adminAuth.js";
 import authRoute from "./routes/authRoutes.js";
 import profileRoute from "./routes/profileRoutes.js";
 import requestRouter from "./routes/requestRouter.js";
+import userRouter from "./routes/userRoutes.js";
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -12,6 +13,7 @@ app.use(cookieParser());
 app.use("/", authRoute);
 app.use("/", profileRoute);
 app.use("/", requestRouter);
+app.use("/",userRouter)
 
 
 
