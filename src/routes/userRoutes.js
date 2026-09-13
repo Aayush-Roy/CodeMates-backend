@@ -4,13 +4,13 @@ import { Connection } from "../models/connectionRequest.js";
 const router = Router();
 
 
-router.get("/user/requests", userAuth, async (req,res)=>{
+router.get("/user/requests/recieved", userAuth, async (req,res)=>{
     try{
         const loggedInUser = req.user;
         const connectionRequests = await Connection.find({
             toUserId:loggedInUser._id,
-            status:"interested"
-        })
+            status:"interested"  
+        }).populate("fromUserId","firstName lastName age photoUrl gender skills about");
         return res.json({
             message:"Data fetch Successfully",
             data:connectionRequests

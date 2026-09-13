@@ -7,11 +7,11 @@ import { validateSignUpData } from "../utils/validation.js";
 router.post("/signup",async(req,res)=>{
       try{
         validateSignUpData(req);
-        const {firstName, lastname, email, password} = req.body;
+        const {firstName, lastName, email, password, skills} = req.body;
         const hashedPassword = await bcrypt.hash(password,10);
         console.log(hashedPassword)
         const newUser =  User({
-            firstName, lastname, email, password:hashedPassword
+            firstName, lastName, email, password:hashedPassword
         });
         console.log(newUser)
        await newUser.save();

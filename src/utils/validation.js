@@ -1,9 +1,9 @@
 import validator from "validator";
 
 export const validateSignUpData = (req) => {
-    const { firstName, lastname, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
-    if (!firstName || !lastname) {
+    if (!firstName || !lastName) {
         throw new Error("First Name and Last Name are Required");
     }
     else if (!validator.isEmail(email)) {
