@@ -10,6 +10,7 @@ router.post("/request/send/:status/:toUserId", userAuth, async(req,res)=>{
     try{
         const fromUserId = req.user._id;
         const toUserId = req.params.toUserId;
+       
         const status = req.params.status;
         const allowedStatus = ["ignored","interested"];
         if(!allowedStatus.includes(status)){
@@ -19,7 +20,8 @@ router.post("/request/send/:status/:toUserId", userAuth, async(req,res)=>{
         
         const toUser = await User.findById(toUserId);
         if(!toUser) return res.status(404).json({message:"User doesn't exist"});
-
+         console.log("REQUEST SENDER:", req.user.firstName, req.user._id);
+console.log("REQUEST RECEIVER:", toUser.firstName, toUser._id);
         const existingConnectionRequest = await Connection.findOne({
             $or:[
                 {fromUserId, toUserId},
@@ -36,7 +38,7 @@ router.post("/request/send/:status/:toUserId", userAuth, async(req,res)=>{
             toUserId,
             status,
         })
-
+        
         const data = await connectionRequest.save();
         res.json({
             // message:`${req.user.firstName} is ${status} in ${toUser.firstName}`,
