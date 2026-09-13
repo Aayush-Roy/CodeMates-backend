@@ -73,6 +73,9 @@ router.post("/request/review/:status/:requestId", userAuth, async(req,res)=>{
             return res.status(404)
             .json({message:"Connection Request Not Found!"})
         }
+         connectionRequest.status = status;
+        const data = await connectionRequest.save();
+        return res.json({message:"Connection request "+ status, data})
     }catch(err){
         res.status(400).send("Error"+err.message);
     }
