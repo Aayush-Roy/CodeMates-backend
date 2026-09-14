@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { userAuth } from "../middleware/adminAuth.js";
 import { Connection } from "../models/connectionRequest.js";
+import { User } from "../models/user.js";
 const router = Router();
 
 const USER_SAFE_DATA = "firstName lastName age photoUrl gender skills about";
@@ -73,5 +74,19 @@ router.get("/user/connections", userAuth, async (req, res) => {
   }
 });
 
+
+router.get("/feed", userAuth, async(req,res)=>{
+  try{
+    const loggedInUser = req.user;
+    const statusNotAllowed = ["interested","accepted","ignored"]
+    const connections = await Connection.find({
+      status:$nin[statusNotAllowed]
+    });
+    const feed = await User.find({})
+    return res.json(connections);
+  }catch(err){
+    res.status(400).send(err.message)
+  }
+})
 
 export default router;
