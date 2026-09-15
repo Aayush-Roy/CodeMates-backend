@@ -78,12 +78,26 @@ router.get("/user/connections", userAuth, async (req, res) => {
 router.get("/feed", userAuth, async(req,res)=>{
   try{
     const loggedInUser = req.user;
-    const statusNotAllowed = ["interested","accepted","ignored"]
     const connections = await Connection.find({
-      status:$nin[statusNotAllowed]
-    });
-    const feed = await User.find({})
-    return res.json(connections);
+      $or:[
+        {fromUserId:loggedInUser._id},
+        {toUserId:loggedInUser._id}
+      ]
+    }).select("fromUserId toUserId");
+
+    const hideUserFeed = new Set();;
+    connections.forEach((req)=>{
+      hideUserFeed.add(req.fromUserId.toString());
+      hideUserFeed.add(req.toUserId.toString());
+    })
+    console.log("hideuser ", hideUserFeed);
+    const users = await User.find({
+      $and:[{_id:{$nin:Array.from(hideUserFeed)}},
+        {_id:{$ne:loggedInUser._id}}
+      ]
+      
+    })
+    return res.send(connections);
   }catch(err){
     res.status(400).send(err.message)
   }
