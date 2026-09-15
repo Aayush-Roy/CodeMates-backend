@@ -78,6 +78,9 @@ router.get("/user/connections", userAuth, async (req, res) => {
 router.get("/feed", userAuth, async(req,res)=>{
   try{
     const loggedInUser = req.user;
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const skip = (page-1)*limit;
     const connections = await Connection.find({
       $or:[
         {fromUserId:loggedInUser._id},
@@ -95,7 +98,7 @@ router.get("/feed", userAuth, async(req,res)=>{
       $and:[{_id:{$nin:Array.from(hideUserFeed)}},
         {_id:{$ne:loggedInUser._id}}
       ]
-    }).select(USER_SAFE_DATA)
+    }).select(USER_SAFE_DATA).skip(skip).limit(limit)
     return res.send(users);
   }catch(err){
     res.status(400).send(err.message)
