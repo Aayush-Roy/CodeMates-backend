@@ -95,9 +95,8 @@ router.get("/feed", userAuth, async(req,res)=>{
       $and:[{_id:{$nin:Array.from(hideUserFeed)}},
         {_id:{$ne:loggedInUser._id}}
       ]
-      
-    })
-    return res.send(connections);
+    }).select(USER_SAFE_DATA)
+    return res.send(users);
   }catch(err){
     res.status(400).send(err.message)
   }
