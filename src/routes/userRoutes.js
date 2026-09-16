@@ -80,6 +80,7 @@ router.get("/feed", userAuth, async(req,res)=>{
     const loggedInUser = req.user;
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
+    limit = limit > 50 ? 50 : limit;
     const skip = (page-1)*limit;
     const connections = await Connection.find({
       $or:[
