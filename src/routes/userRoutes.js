@@ -21,31 +21,6 @@ router.get("/user/requests/recieved", userAuth, async (req,res)=>{
     }
 })
 
-
-// router.get("/user/connections", userAuth, async(req,res)=>{
-//     try{
-//         const loggedInUser = req.user;
-//         const connectionReqeuests = await Connection.find({
-//             $or:[
-//                 {
-//                     toUserId:loggedInUser._id, status:"accepted",
-//                 },
-//                 {fromUserId:loggedInUser._id, status:"accepted"}
-//             ]
-//         }).populate("fromUserId",USER_SAFE_DATA)
-//         .populate("toUserId", USER_SAFE_DATA)
-
-//         connectionReqeuests.forEach((row) => {
-//     console.log("FROM:", row.fromUserId);
-//     console.log("TO:", row.toUserId);
-//     console.log("STATUS:", row.status);
-// });
-//         const data = connectionReqeuests.map((row)=>row.fromUserId);
-//         return res.json(data);
-//     }catch(err){
-//         res.status(400).json(err.message )
-//     }
-// })
 router.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;

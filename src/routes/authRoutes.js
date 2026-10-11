@@ -40,7 +40,14 @@ router.post("/login", async (req,res)=>{
            
             if (isPasswordValid) {
             const token = await user.getJWT();
-            res.cookie("token",token, {expires:new Date(Date.now()+8*360000)});
+            console.log("login token", token)
+            // res.cookie("token",token, {expires:new Date(Date.now()+8*360000)});
+            res.cookie("token", token, {
+  httpOnly: true,
+  secure: false,
+  sameSite: "lax",
+  expires: new Date(Date.now() + 8 * 3600000)
+});
             res.send(user);
             }else{
                 throw new Error("Invalid Credentials");
