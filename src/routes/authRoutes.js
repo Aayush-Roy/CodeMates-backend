@@ -50,12 +50,16 @@ router.post("/login", async (req,res)=>{
 });
             res.send(user);
             }else{
-                throw new Error("Invalid Credentials");
+                // throw new Error("Invalid Credentials");
+                 return res.status(401).json({
+                success: false,
+                message: "Invalid email or password"
+            });
             }
            
     
         } catch (err) {
-            res.status(400).send(err.message);
+            res.status(400).send(err);
         }
 })
 

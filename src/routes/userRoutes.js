@@ -53,6 +53,7 @@ router.get("/user/connections", userAuth, async (req, res) => {
 router.get("/feed", userAuth, async(req,res)=>{
   try{
     const loggedInUser = req.user;
+    console.log("user", loggedInUser)
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
     limit = limit > 50 ? 50 : limit;
