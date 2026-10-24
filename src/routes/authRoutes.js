@@ -14,8 +14,17 @@ router.post("/signup",async(req,res)=>{
             firstName, lastName, email, password:hashedPassword
         });
         console.log(newUser)
-       await newUser.save();
-        res.send("User Created", newUser)
+       const savedUser = await newUser.save();
+         const token = await savedUser.getJWT();
+            console.log("login token", token)
+           
+            res.cookie("token", token, {
+  httpOnly: true,
+  secure: false,
+  sameSite: "lax",
+  expires: new Date(Date.now() + 8 * 3600000)
+});
+        res.json({message:"User Created", data: savedUser})
         }catch(err){
             res.send(err.message);
         }
@@ -41,7 +50,7 @@ router.post("/login", async (req,res)=>{
             if (isPasswordValid) {
             const token = await user.getJWT();
             console.log("login token", token)
-            // res.cookie("token",token, {expires:new Date(Date.now()+8*360000)});
+           
             res.cookie("token", token, {
   httpOnly: true,
   secure: false,

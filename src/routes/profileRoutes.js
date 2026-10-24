@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/profile/view",userAuth,async(req,res)=>{
     try{
-        console.log("from profile", req.cookies)
+        
         const user = req.user;
         if(!user) throw new Error("user not found");
     res.send(user);
