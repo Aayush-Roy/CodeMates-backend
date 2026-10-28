@@ -6,6 +6,7 @@
     import profileRoute from "./routes/profileRoutes.js";
     import requestRouter from "./routes/requestRouter.js";
     import userRouter from "./routes/userRoutes.js";
+    import paymnetRouter from "./routes/paymentRoutes.js"
     import cors from "cors"
     const app = express();
     app.use(cors({
@@ -22,6 +23,7 @@
     app.use("/", profileRoute);
     app.use("/", requestRouter);
     app.use("/",userRouter)
+    app.use("/",paymnetRouter);
 
 
 
