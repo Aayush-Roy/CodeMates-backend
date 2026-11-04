@@ -8,7 +8,21 @@ export const initializeSocket=(server)=>{
       }
     });
     
-    io.on("connect",(socket)=>{
-      // 
+    io.on("connection",(socket)=>{
+      socket.on("joinChat",({firstName, userId,targetUserId})=>{
+        const roomId = [userId, targetUserId].join("_")
+        console.log(firstName+ "Joining room", roomId);
+        socket.join(roomId)
+      });
+
+      socket.on("sendMessage",()=>{
+
+      });
+
+      socket.on("disconnect",()=>{
+
+      })
+
+
     })
 }
