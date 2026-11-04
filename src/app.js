@@ -10,6 +10,7 @@
     import { Server } from "socket.io";
     import http from "http"
     import cors from "cors"
+import { initializeSocket } from "./utils/socket.js";
     const app = express();
     app.use(cors({
     origin: "http://localhost:5173",
@@ -29,14 +30,7 @@
 
    const server = http.createServer(app);
 
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:5173",
-    credentials: true,
-    methods: ["GET", "POST"]
-  }
-});
-
+  initializeSocket(server)
 
     connectDB().then(()=>{
         console.log("DB connection established");
