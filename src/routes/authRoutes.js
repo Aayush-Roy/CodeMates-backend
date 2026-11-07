@@ -16,7 +16,7 @@ router.post("/signup",async(req,res)=>{
         console.log(newUser)
        const savedUser = await newUser.save();
          const token = await savedUser.getJWT();
-            console.log("login token", token)
+           
            
             res.cookie("token", token, {
   httpOnly: true,
