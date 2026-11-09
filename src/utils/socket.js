@@ -37,6 +37,7 @@
 
 import { Server } from "socket.io";
 import crypto from "crypto"
+import { Chat } from "../models/chat.js";
 
 const getScretRoomId = (userId, targetUserId)=>{
   return crypto
@@ -57,7 +58,8 @@ export const initializeSocket = (server) => {
     console.log("User connected:", socket.id);
 
     socket.on("joinChat", ({ firstName, userId, targetUserId }) => {
-      const roomId = getScretRoomId(userId,targetUserId)
+      // const roomId = getScretRoomId(userId,targetUserId)
+      const roomId = getScretRoomId(userId, targetUserId);
 
       socket.join(roomId);
 
@@ -66,8 +68,9 @@ export const initializeSocket = (server) => {
 
     socket.on(
       "sendMessage",
-      ({ firstName, userId, targetUserId, text }) => {
-        const roomId = [userId, targetUserId].sort().join("_");
+      async ({ firstName, userId, targetUserId, text }) => {
+        // const roomId = [userId, targetUserId].sort().join("_");
+        const roomId = getScretRoomId(userId, targetUserId);
 
         console.log("Message received:", firstName, text);
 
@@ -78,7 +81,30 @@ export const initializeSocket = (server) => {
           createdAt: new Date(),
         };
 
-        io.to(roomId).emit("messageReceived", newMessage);
+        try{
+          let chat = await Chat.findOne({
+            participants:{$all:[userId,targetUserId]}
+          });
+
+            if (!chat) {
+    chat = new Chat({
+      participants: [userId, targetUserId],
+      messages: []
+    });
+  }
+
+          chat.messages.push({
+            senderId:userId,
+            text
+          })
+          
+          await chat.save()
+          io.to(roomId).emit("messageReceived", newMessage);
+        }catch(err){
+          console.log(err)
+        }
+
+        
       }
     );
 

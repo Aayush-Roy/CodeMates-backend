@@ -7,6 +7,7 @@
     import requestRouter from "./routes/requestRouter.js";
     import userRouter from "./routes/userRoutes.js";
     import paymnetRouter from "./routes/paymentRoutes.js"
+    import chatRouter from "./routes/chatRoutes.js";
     import { Server } from "socket.io";
     import http from "http"
     import cors from "cors"
@@ -27,6 +28,7 @@ import { initializeSocket } from "./utils/socket.js";
     app.use("/", requestRouter);
     app.use("/",userRouter)
     app.use("/",paymnetRouter);
+    app.use("/",chatRouter);
 
    const server = http.createServer(app);
 
