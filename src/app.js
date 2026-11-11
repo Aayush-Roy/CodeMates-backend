@@ -62,6 +62,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "https://codemates-ui.ar0671362.workers.dev",
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
