@@ -12,4 +12,4 @@ jobs:
     steps:
       - name: Ping Backend
         run: |
-          curl -fsS https://your-backend.onrender.com/health
+          curl -fsS https://codemates-backend-ugo3.onrender.com/health
