@@ -68,7 +68,7 @@ export const initializeSocket = (server) => {
 
     socket.on(
       "sendMessage",
-      async ({ firstName, userId, targetUserId, text }) => {
+      async ({ firstName, lastName, userId, targetUserId, text }) => {
         // const roomId = [userId, targetUserId].sort().join("_");
         const roomId = getScretRoomId(userId, targetUserId);
 
@@ -76,6 +76,7 @@ export const initializeSocket = (server) => {
 
         const newMessage = {
           firstName,
+          lastName,
           userId,
           text,
           createdAt: new Date(),
