@@ -3,6 +3,7 @@ import RazorpayInstance from "../utils/razorpay.js";
 import { userAuth } from "../middleware/adminAuth.js";
 import { Payment } from "../models/payment.js";
 import { membershipAmount } from "../utils/constant.js";
+import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
 
 const router = Router();
 
@@ -51,5 +52,16 @@ router.post("/payment/create", userAuth, async (req, res) => {
     });
   }
 });
+
+
+router.post("/payment/webhook",async(req,res)=>{
+  try{
+    const webhookSignature = req.headers['x-razorpay-signature'];
+   const isWebhookValid = validateWebhookSignature(JSON.stringify(req.body), webhookSignature, "codemates")
+  }catch(err){
+    console.log(err);
+  }
+
+})
 
 export default router;
