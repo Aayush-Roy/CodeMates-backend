@@ -148,7 +148,7 @@ router.post("/payment/create", userAuth, async (req, res) => {
 
     res.status(201).json({
       ...savedPayment.toJSON(),
-      keyId: "rzp_test_TtOSqsXTsL5sd3",
+      keyId: process.env.RAZORPAY_KEY_ID,
     });
   } catch (err) {
     console.error("Payment creation error:", err);
@@ -167,7 +167,7 @@ router.post("/payment/webhook", async (req, res) => {
     const isValid = validateWebhookSignature(
       rawBody,
       signature,
-      "codemates" // Razorpay Dashboard wala webhook secret
+      process.env.RAZORPAY_WEBHOOK_SECRET // Razorpay Dashboard wala webhook secret
     );
     if (!isValid) {
       return res.status(400).json({ msg: "Invalid webhook signature" });
