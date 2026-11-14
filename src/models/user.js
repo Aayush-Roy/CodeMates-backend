@@ -38,6 +38,13 @@ const userSchema = mongoose.Schema({
             message:`{VALUE} is not a valid gender type`
         }
     },
+    isPremium:{
+        type:Boolean,
+        default:false
+    },
+    membershipType:{
+        type:String
+    },
     photoUrl:{
         type:String,
         default:"https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg"

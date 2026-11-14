@@ -4,6 +4,7 @@ import { userAuth } from "../middleware/adminAuth.js";
 import { Payment } from "../models/payment.js";
 import { membershipAmount } from "../utils/constant.js";
 import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
+import { User } from "../models/user.js";
 
 const router = Router();
 
@@ -56,12 +57,42 @@ router.post("/payment/create", userAuth, async (req, res) => {
 
 router.post("/payment/webhook",async(req,res)=>{
   try{
-    const webhookSignature = req.headers['x-razorpay-signature'];
+    const webhookSignature = req.headers('x-razorpay-signature');
    const isWebhookValid = validateWebhookSignature(JSON.stringify(req.body), webhookSignature, "codemates")
+   if(!isWebhookValid) return res.json({msg:"Webhook signature is invalid"});
+   const paymentDetails = req.body.payload.payment.entity;
+
+   const payment = await Payment.findOne({orderId:paymentDetails.order_id})
+    payment.status = paymentDetails.status;
+    await payment.save();
+
+    const user = await User.findOne({_id:payment.userId})
+    user.isPremium = true;
+    user.membershipType = payment.notes.membershipType;
+
+    await user.save();
+
+   if(req.body.event=='payment.captured'){
+
+   }
+   if(req.body.event=='payment.failed'){
+
+   }
+
+
   }catch(err){
     console.log(err);
   }
 
+})
+
+
+router.get("/premium/verify",userAuth, async(req,res)=>{
+  const user = req.user.toJSON();
+  if(user.isPremium){
+    return res.json({ ...user})
+  }
+  return res.json({...user})
 })
 
 export default router;
